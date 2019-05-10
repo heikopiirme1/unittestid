@@ -46,12 +46,19 @@ class ReceiptTest extends TestCase {
     }
 
     public function testPostTaxTotal() {
+        $items = [1,2,5,8];
+        $tax = 0.20;
+        $coupon = null;
         $Receipt = $this->getMockBuilder('TDD\Receipt')
             ->setMethods(['tax', 'total'])
             ->getMock(); // Luuakse stub
-        $Receipt->method('total')
+        $Receipt->expects($this->once()) // Eeldab, et meetodit total kutsutakse välja ühe korra. Vastasel juhul test failib.
+            ->method('total')
+            ->with($items, $coupon)
             ->will($this->returnValue(10.00)); // Konfiguratsioon, meetod total tagastab nüüd 10. lühem variant ->willReturn(10.00);
-        $Receipt->method('tax')
+        $Receipt->expects($this->once()) // Eeldab, et meetodit tax kutsutakse välja ühe korra. Vastasel juhul test failib.
+            ->method('tax')
+            ->with(10.00, $tax)
             ->will($this->returnValue(1.00)); // Konfiguratsioon, meetod total tagastab nüüd 10. lühem variant ->willReturn(1.00);
         $result = $Receipt->postTaxTotal([1,2,5,8], 0.20, null);
         $this->assertEquals(11.00, $result); // Võrdleb vasteid
