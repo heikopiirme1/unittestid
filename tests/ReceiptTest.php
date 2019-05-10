@@ -53,6 +53,13 @@ class ReceiptTest extends TestCase {
         );
     }
 
+    public function testTotalException(){
+        $input = [0,2,5,8];
+        $coupon = 1.20;
+        $this->expectException('BadMethodCallException'); // Kuna kupongi väärtus on > 1, oodatakse testi tulemuseks BadMethodCallExceptionit
+        $this->Receipt->total($input, $coupon);
+    }
+
     public function testPostTaxTotal() {
         $items = [1,2,5,8];
         $tax = 0.20;
