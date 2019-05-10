@@ -44,4 +44,16 @@ class ReceiptTest extends TestCase {
             'The tax calculation should equal 1.00' //Veateadet hetkel ei väljastata kuna vastus on õige
         );
     }
+
+    public function testPostTaxTotal() {
+        $Receipt = $this->getMockBuilder('TDD\Receipt')
+            ->setMethods(['tax', 'total'])
+            ->getMock(); // Luuakse stub
+        $Receipt->method('total')
+            ->will($this->returnValue(10.00)); // Konfiguratsioon, meetod total tagastab nüüd 10. lühem variant ->willReturn(10.00);
+        $Receipt->method('tax')
+            ->will($this->returnValue(1.00)); // Konfiguratsioon, meetod total tagastab nüüd 10. lühem variant ->willReturn(1.00);
+        $result = $Receipt->postTaxTotal([1,2,5,8], 0.20, null);
+        $this->assertEquals(11.00, $result); // Võrdleb vasteid
+    }
 }
