@@ -12,15 +12,22 @@ class ReceiptTest extends TestCase {
         unset($this->Receipt);
     }
 
-    public function testTotal() {
-        $input = [0,2,5,8];
+    public function testTotal($items, $expected) {
         $coupon = null;
-        $output = $this->Receipt->total($input, $coupon);// Luuakse uus tšekk
+        $output = $this->Receipt->total($items, $coupon);// Luuakse uus tšekk
         $this->assertEquals( // Võrdleme, kas väärtused on võrdsed
-            14, // Tulemus, mis peaks testi läbimiseks tulema
+            $expected, // Tulemus, mis peaks testi läbimiseks tulema
             $output, // Kasutatakse Receipt.php funktsiooni total, mis liidab arrays olevad liikmed kokku- antud juhul peaks vastus tulema 15
-            'When summing the total should equal 15' // Kui vasted pole võrdsed, väljastatakse teade.
+            'When summing the total should equal {$expected}' // Kui vasted pole võrdsed, väljastatakse teade.
         );
+    }
+
+    public function provideTotal() {
+        return [
+            [[1,2,5,8], 16],
+            [[-1,2,5,8], 14],
+            [[1,2,8], 11],
+        ];
     }
 
     public function testTotalAndCoupon(){
